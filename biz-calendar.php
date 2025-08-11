@@ -43,7 +43,7 @@ class BC
 		$option = self::get_option();
 		$option["plugindir"] = plugin_dir_url( __FILE__ );
 		$nh= self::get_national_holiday();
-		$option["national_holiday"] = $nh["national_holiday"];
+		$option["national_holiday"] = $nh["national_holiday"] ?? [];
 		wp_localize_script( 'biz-cal-script', 'bizcalOptions', $option );
 	}
 
@@ -70,7 +70,9 @@ class BizCalendarPlugin{
 		add_action( 'admin_menu', array(&$this, 'on_admin_menu'));
 		add_action( 'wp_enqueue_scripts', array(&$this,'on_enqueue_scripts'));
 		add_action( 'wp_ajax_upload_holidays', array(&$this,'upload_holidays') );
-		add_action( 'widgets_init', create_function( '', 'register_widget( "bizcalendarwidget" );' ) );
+		add_action('widgets_init', function () {
+   			register_widget('bizcalendarwidget');
+		});
 	}
 
 	function on_activation() {
